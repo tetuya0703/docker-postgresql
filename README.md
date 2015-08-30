@@ -71,9 +71,7 @@ If you don't set DB_PASS variable, an automatic password is generated for the Po
 
 ```
 docker run -d -p 5432:5432 --name postgresql94 --env 'DB_USER=YOUR_USERNAME' --env 'DB_NAME=YOUR_DATABASE' zokeber/postgresql
-
-docker logs postgresql94 
-
+docker logs postgresql94
 ```
 
 The output:
@@ -84,7 +82,6 @@ WARNING:
 No password specified for "YOUR_USERNAME". Generating one
 Password for "YOUR_USERNAME" created as: "aich3aaH0yiu"
 ...
-
 ```
 
 To connect to newly created postgresql container:
@@ -93,7 +90,9 @@ To connect to newly created postgresql container:
 
 Another way to connect to postgresql container with your newly created user:
 
-`psql -U YOUR_USERNAME -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql94)`
+```
+psql -U YOUR_USERNAME -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql94)
+```
 
 
 ### Upgrading
