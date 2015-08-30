@@ -62,7 +62,10 @@ Another alternatively, you can build an image directly from Github:
 
 You can create a postgresql database and superuser at launch. Use `DB_NAME`, `DB_USER` and `DB_PASS` variables.
 
-``` docker create -it -p 5432:5432 --name postgresql --env 'DB_USER=YOUR_USERNAME' --env 'DB_PASS=YOUR_PASSWORD' --env 'DB_NAME=YOUR_DATABASE' zokeber/postgresql ```
+```
+docker create -it -p 5432:5432 --name postgresql --env 'DB_USER=YOUR_USERNAME' --env 'DB_PASS=YOUR_PASSWORD' --env 'DB_NAME=YOUR_DATABASE' zokeber/postgresql
+
+```
  
 If you don't set DB_PASS variable, an automatic password is generated for the PostgreSQL database user. Check to stdout/stderr log of container created:
 
@@ -70,24 +73,27 @@ If you don't set DB_PASS variable, an automatic password is generated for the Po
 docker run -d -p 5432:5432 --name postgresql94 --env 'DB_USER=YOUR_USERNAME' --env 'DB_NAME=YOUR_DATABASE' zokeber/postgresql
 
 docker logs postgresql94 
+
 ```
 
 The output:
 
-``` ...
+```
+...
 WARNING: 
 No password specified for "YOUR_USERNAME". Generating one
 Password for "YOUR_USERNAME" created as: "aich3aaH0yiu"
-... ```
+...
 
+```
 
 To connect to newly created postgresql container:
 
-``` docker exec -it postgresql94 psql -U YOUR_USERNAME ```
+`docker exec -it postgresql94 psql -U YOUR_USERNAME`
 
 Another way to connect to postgresql container with your newly created user:
 
-``` psql -U YOUR_USERNAME -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql94) ```
+`psql -U YOUR_USERNAME -h $(docker inspect --format {{.NetworkSettings.IPAddress}} postgresql94)`
 
 
 ### Upgrading
