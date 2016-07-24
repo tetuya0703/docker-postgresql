@@ -1,7 +1,13 @@
 sudo: required
 
-install:
-- curl -sLo - http://j.mp/install-travis-docker | sh -xe
+env:
+  global:
+    - DOCKER_VERSION=1.9.1  # Install Docker version 1.9.1
+
+services:
+  - docker
 
 script:
-- ./run "docker build -t zokeber/postgresql ."
+  - docker build -t zokeber/postgresql:latest .
+  - docker run -d -p 5432:5432 --name postgresql94 zokeber/postgresql
+  - docker ps -a
