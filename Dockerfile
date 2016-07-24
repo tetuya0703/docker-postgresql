@@ -39,9 +39,13 @@ WORKDIR /var/lib/pgsql
 COPY data/postgresql-setup /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup
 
 # Install postgresql and run InitDB
-RUN rpm -vih http://yum.postgresql.org/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-1.noarch.rpm && \
+RUN rpm -vih http://yum.postgresql.org/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-2.noarch.rpm && \
     yum update -y && \
-    yum install sudo pwgen postgresql$PGVERSION postgresql$PGVERSION-server postgresql$PGVERSION-contrib -y && \
+    yum install -y sudo \
+    pwgen \
+    postgresql$PGVERSION \
+    postgresql$PGVERSION-server \
+    postgresql$PGVERSION-contrib && \
     yum clean all && \
     /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup initdb
 
