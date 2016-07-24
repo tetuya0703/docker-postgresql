@@ -19,7 +19,7 @@
 
 
 # Pull base image
-FROM zokeber/centos
+FROM zokeber/centos:latest
 
 # Maintener
 MAINTAINER Daniel Lopez Monagas <zokeber@gmail.com>
@@ -27,12 +27,6 @@ MAINTAINER Daniel Lopez Monagas <zokeber@gmail.com>
 # Postgresql version
 ENV PG_VERSION 9.4
 ENV PGVERSION 94
-
-# Install PostgreSQL
-RUN rpm -vih http://yum.postgresql.org/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-1.noarch.rpm
-RUN yum update -y
-RUN yum install sudo pwgen postgresql$PGVERSION postgresql$PGVERSION-server postgresql$PGVERSION-contrib -y
-RUN yum clean all
 
 # Set the environment variables
 ENV HOME /var/lib/pgsql
@@ -44,8 +38,12 @@ WORKDIR /var/lib/pgsql
 #Copy
 COPY data/postgresql-setup /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup
 
-# InitDB
-RUN /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup initdb
+# Install postgresql and run InitDB
+RUN rpm -vih http://yum.postgresql.org/$PG_VERSION/redhat/rhel-7-x86_64/pgdg-centos$PGVERSION-$PG_VERSION-1.noarch.rpm && \
+    yum update -y && \
+    yum install sudo pwgen postgresql$PGVERSION postgresql$PGVERSION-server postgresql$PGVERSION-contrib -y && \
+    yum clean all && \
+    /usr/pgsql-$PG_VERSION/bin/postgresql$PGVERSION-setup initdb
 
 # Copy config file
 COPY data/postgresql.conf /var/lib/pgsql/$PG_VERSION/data/postgresql.conf
@@ -55,9 +53,9 @@ COPY data/pg_hba.conf /var/lib/pgsql/$PG_VERSION/data/pg_hba.conf
 RUN chown -R postgres:postgres /var/lib/pgsql/$PG_VERSION/data/*
 
 # Copy run file
-RUN usermod -G wheel postgres
-RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
-ADD data/postgresql.sh /usr/local/bin/postgresql.sh
+RUN usermod -G wheel postgres && \
+    sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
+COPY data/postgresql.sh /usr/local/bin/postgresql.sh
 RUN chmod +x /usr/local/bin/postgresql.sh
 
 # Set volume
