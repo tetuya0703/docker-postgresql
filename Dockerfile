@@ -62,6 +62,10 @@ RUN chown -R postgres:postgres /var/lib/pgsql/$PG_VERSION/data/* && \
     sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers && \
     chmod +x /usr/local/bin/postgresql.sh
 
+RUN chgrp -R 0 /var/lib/pgsql
+RUN chmod -R g+rw /var/lib/pgsql
+RUN find /var/lib/pgsql -type d -exec chmod g+x {} +
+
 # Set volume
 VOLUME ["/var/lib/pgsql"]
 
